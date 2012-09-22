@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Dots</title>
+    <style>
+        #picker { width: 200px; height: 200px }
+        #slide { width: 30px; height: 200px }
+
+        #holder {
+            position: relative;
+            width: 533px;
+            height:310px;
+            top: 10px;
+            left: 220px;
+            border: 2px solid #333;
+            background-color:#000;
+        }
+        #canvas {
+            position: absolute;
+            top: 220;
+            left: 5;
+
+        }
+
+    </style>
+    <link href="css/colorpicker/themes.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="scripts/raphael.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Scripts/dots.js" type="text/javascript"></script>
+    <script src="Scripts/colorpicker.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var R;
+        var currentColor = Raphael.rgb2hsb("#ff2800");
+        var canvas;
+
+         $(function () {
+            var cp;
+            var c = document.getElementById('color-picker');
+            c.className = 'cp-fancy';
+
+            cp = ColorPicker(document.getElementById('slide'), document.getElementById('picker'), 
+                function(hex, hsv, rgb, mousePicker, mouseSlide) {
+                    currentColor = hex;
+                    ColorPicker.positionIndicators(
+                        document.getElementById('slide-indicator'),
+                        document.getElementById('picker-indicator'),
+                        mouseSlide, mousePicker
+                    );
+                    document.getElementById('hex').innerHTML = hex;
+                    document.getElementById('rgb').innerHTML = 'rgb(' + rgb.r.toFixed() + ',' + rgb.g.toFixed() + ',' + rgb.b.toFixed() + ')';
+                    document.getElementById('hsv').innerHTML = 'hsv(' + hsv.h.toFixed() + ',' + hsv.s.toFixed(2) + ',' + hsv.v.toFixed(2) + ')';
+            });
+            cp.setHex('#ff2800');
+
+
+            // Creates canvas 700 × 800 at 10, 50
+            //var paper = Raphael(10, 250, 700, 800);
+            paper=Raphael(document.getElementById("canvas"),700,800);
+
+            var mouseDown = 0;
+            document.body.onmousedown = function () {
+                ++mouseDown;
+            }
+            document.body.onmouseup = function () {
+                --mouseDown;
+            }
+
+            //var canvas = document.getElementById('gameCanvas');
+            //canvas.width = canvas.parentNode.clientWidth;
+            //canvas.height = canvas.parentNode.clientHeight;
+            var MAX_ROWS = 70;
+            var MAX_COLS = 40;
+
+            for (var i = 0; i < MAX_ROWS; i++) {
+                //circles[i] = new Array(MAX_COLS);
+                for (var j = 0; j < MAX_COLS; j++) {
+                    //circles[i][j] = new Circle(i, j, false);
+                    (function (dx, dy, R, value) {
+                        // initial color of the circle
+                        var color = Raphael.rgb2hsb("#eee");
+
+                        var circleSize = 3;
+
+                        var anim = Raphael.animation({ cx: (circleSize*2.5) * (i + 1), cy: (circleSize*2.5) * (j + 1) }, 2e3);
+                        var circle = paper.circle((circleSize*2), (circleSize*2), circleSize).attr({ stroke: "none", fill: color, id: "circle_" + i + "_" + j }).animate(anim);
+                        circle[0].onmouseover = function () {
+                            circle.attr("fill", currentColor);
+                            if (mouseDown)
+                                color = currentColor;
+                        };
+                        circle[0].onmouseout = function () {
+                            circle.attr("fill", color);
+                        };
+                        circle[0].onclick = function () {
+                            circle.attr("fill", currentColor);
+                            color = currentColor;
+                        };
+                    })()
+                }
+            }
+        });
+    </script>
+    </head>
+    <body>
+        <div id="color-picker" class="cp-default">
+            <div class="picker-wrapper">
+                <div id="picker" class="picker"></div>
+                <div id="picker-indicator" class="picker-indicator"></div>
+            </div>
+            <div class="slide-wrapper">
+                <div id="slide" class="slide"></div>
+                <div id="slide-indicator" class="slide-indicator"></div>
+            </div>
+        </div>
+        <ul id="color-values">
+            <li><label>RGB:</label><span id="rgb">rgb(255,0,0)</span></li>
+            <li><label>HSV:</label><span id="hsv">hsv(0.2,1,1)</span></li>
+            <li><label>HEX:</label><span id="hex">#FF0000</span></li>
+        </ul>
+        <script type="text/javascript">
+        </script>
+
+        <DIV id="holder" style="clear:both;">
+            <DIV id="canvas" width="400" height="300"></DIV>
+        </DIV>
+    </body>
+</html>
