@@ -11,7 +11,7 @@
     <script src="Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="scripts/raphael.js" type="text/javascript" charset="utf-8"></script>
     <script src="Scripts/dots.js" type="text/javascript"></script>
-    <script src="Scripts/colorpicker.min.js" type="text/javascript"></script>
+
     <script type="text/javascript" charset="utf-8">
         var R;
 
@@ -26,28 +26,13 @@
         $(function () {
             R = Raphael("holder");
 
-            //var canvas = document.getElementById('gameCanvas');
-            //canvas.width = canvas.parentNode.clientWidth;
-            //canvas.height = canvas.parentNode.clientHeight;
-
-            loadClickLines();
-            loadSquares();
-            loadCircles();
+            window.rf.dots.loadClickLines();
+            window.rf.dots.loadSquares();
+            window.rf.dots.loadCircles();
         });
     </script>
     </head>
     <body>
-        <div id="picker"></div>
-        <div id="slide"></div>
-        <script type="text/javascript">
-            ColorPicker(
-            document.getElementById('slide'),
-            document.getElementById('picker'),
-            function(hex, hsv, rgb) {
-                document.body.style.backgroundColor = hex;
-            });
-        </script>
-
         <div id="holder"></div>
     </body>
 </html>
